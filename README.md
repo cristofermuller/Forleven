@@ -31,7 +31,7 @@ Acesso ao banco de dados: `http://localhost:8080/h2`
 
 ## Ferramentas
 
-Java
-Spring boot
-Spring Web   
-H2 database
+- Java
+- Spring boot
+- Spring Web   
+- H2 database
