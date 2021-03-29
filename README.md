@@ -3,7 +3,7 @@
 API desenvolvida para teste de back end do Forleven.
 
 ## Inicialização
-- ** Java 11 instalado com o `PATH_VARIABLE` configurado e uma IDE de sua preferência.**
+- **Java 11 instalado com o `PATH_VARIABLE` configurado e uma IDE de sua preferência.**
 
 - **A aplicação está configurada para fazer uso do banco de dados em memória H2.**
 
@@ -22,15 +22,16 @@ Acesso ao banco de dados: `http://localhost:8080/h2`
 - `/students/{id}` - DELETE - Remove um estudante específico.
 
 **Exemplo para adicionar nova entrada de aluno (JSON)**
-
+```json
 { "name" : "cristofer",
 "surname" : "muller",
 "enrollment" : "12345",
 "phone" : ["999999", "888888"] }
+```
 
 ## Ferramentas
 
 Java
-Springboot
+Spring boot
 Spring Web   
 H2 database
