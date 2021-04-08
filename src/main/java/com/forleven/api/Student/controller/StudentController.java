@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/students")
-public class StudentController {
+public class StudentController{
 
     @Autowired
     private StudentService studentService;
@@ -31,6 +31,7 @@ public class StudentController {
             @Valid
             @RequestBody Student student) {
         return studentService.create(student);
+
     }
 
     @PutMapping(value="/{id}")
@@ -46,4 +47,5 @@ public class StudentController {
             @PathVariable long id) {
         return studentService.delete(id);
     }
+
 }

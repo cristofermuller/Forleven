@@ -21,14 +21,12 @@ public class StudentService {
     }
 
     public ResponseEntity<Student> findById(long id) {
-        Optional<Student> studentId = studentRepository
-                .findById(id);
+        Optional<Student> studentId = studentRepository.findById(id);
         if (studentId.isEmpty()) {
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND, "Cadastro não existente");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cadastro não existente");
         }
 
-        return studentId
+        return studentRepository.findById(id)
                 .map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -37,25 +35,21 @@ public class StudentService {
         Optional<Student> studentOptional = studentRepository
                 .findStudentByEnrollment(student.getEnrollment());
         if (studentOptional.isPresent()) {
-            throw new ResponseStatusException
-                    (HttpStatus.CONFLICT, "Número de matrícula já existe no banco de dados.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Número de matrícula já existe no banco de dados.");
         }
         return studentRepository.save(student);
     }
 
     public ResponseEntity<Student> update (long id, Student student){
-        Optional<Student> studentId = studentRepository
-                .findById(id);
+        Optional<Student> studentId = studentRepository.findById(id);
         if (studentId.isEmpty()) {
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND, "Cadastro não existente");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cadastro não existente");
         }
 
         Optional<Student> studentEnrollment = studentRepository
                 .findStudentByEnrollment(student.getEnrollment());
         if (studentEnrollment.isPresent()) {
-            throw new ResponseStatusException
-                    (HttpStatus.CONFLICT, "Número de matrícula já existe no banco de dados.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Número de matrícula já existe no banco de dados.");
         }
 
         return studentId
@@ -72,11 +66,9 @@ public class StudentService {
     public ResponseEntity<?> delete (long id) {
         Optional<Student> studentId = studentRepository.findById(id);
         if (studentId.isEmpty()) {
-            throw new ResponseStatusException
-                    (HttpStatus.NOT_FOUND, "Cadastro não existente");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cadastro não existente");
         }
-
-        return studentId
+        return studentRepository.findById(id)
                 .map(record -> {
                     studentRepository.deleteById(id);
                     return ResponseEntity.ok().build();
