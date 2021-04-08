@@ -1,8 +1,7 @@
-package com.forleven.api.Student.service;
+package com.forleven.api.student.service;
 
-import com.forleven.api.Student.Student;
-import com.forleven.api.Student.repository.StudentRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.forleven.api.student.Student;
+import com.forleven.api.student.repository.StudentRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -13,17 +12,23 @@ import java.util.Optional;
 @Service
 public class StudentService {
 
-    @Autowired
-    private StudentRepository studentRepository;
+    private static final String ERRO = "Cadastro não existente";
+    private static final String ERROMATRICULA = "Número de matrícula já existe no banco de dados.";
 
-    public List findAll() {
+    private final StudentRepository studentRepository;
+
+    public StudentService(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
+
+    public List<Student> findAll() {
         return studentRepository.findAll();
     }
 
     public ResponseEntity<Student> findById(long id) {
         Optional<Student> studentId = studentRepository.findById(id);
         if (studentId.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cadastro não existente");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ERRO);
         }
 
         return studentRepository.findById(id)
@@ -35,21 +40,22 @@ public class StudentService {
         Optional<Student> studentOptional = studentRepository
                 .findStudentByEnrollment(student.getEnrollment());
         if (studentOptional.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Número de matrícula já existe no banco de dados.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, ERROMATRICULA);
         }
+
         return studentRepository.save(student);
     }
 
     public ResponseEntity<Student> update (long id, Student student){
         Optional<Student> studentId = studentRepository.findById(id);
         if (studentId.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cadastro não existente");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ERRO);
         }
 
         Optional<Student> studentEnrollment = studentRepository
                 .findStudentByEnrollment(student.getEnrollment());
         if (studentEnrollment.isPresent()) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Número de matrícula já existe no banco de dados.");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, ERROMATRICULA);
         }
 
         return studentId
@@ -63,10 +69,10 @@ public class StudentService {
                 }).orElse(ResponseEntity.notFound().build());}
 
 
-    public ResponseEntity<?> delete (long id) {
+    public ResponseEntity<Object> delete (long id) {
         Optional<Student> studentId = studentRepository.findById(id);
         if (studentId.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Cadastro não existente");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ERRO);
         }
         return studentRepository.findById(id)
                 .map(record -> {

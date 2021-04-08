@@ -1,7 +1,7 @@
-package com.forleven.api.Student.controller;
+package com.forleven.api.student.controller;
 
-import com.forleven.api.Student.Student;
-import com.forleven.api.Student.service.StudentService;
+import com.forleven.api.student.Student;
+import com.forleven.api.student.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +16,12 @@ public class StudentController{
     private StudentService studentService;
 
     @GetMapping
-    public List findAll() {
+    public List<Student> findAll() {
         return studentService.findAll();
     }
 
     @GetMapping(path = {"/{id}"})
-    public ResponseEntity findById(
+    public ResponseEntity<Student> findById(
             @PathVariable long id) {
         return studentService.findById(id);
     }
@@ -43,7 +43,7 @@ public class StudentController{
     }
 
     @DeleteMapping(path ={"/{id}"})
-    public ResponseEntity <?> delete(
+    public ResponseEntity <Object> delete(
             @PathVariable long id) {
         return studentService.delete(id);
     }

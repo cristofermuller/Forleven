@@ -1,6 +1,6 @@
-package com.forleven.api.Student.repository;
+package com.forleven.api.student.repository;
 
-import com.forleven.api.Student.Student;
+import com.forleven.api.student.Student;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
