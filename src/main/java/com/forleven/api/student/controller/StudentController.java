@@ -16,14 +16,14 @@ public class StudentController{
     private StudentService studentService;
 
     @GetMapping
-    public List<Student> findAll() {
-        return studentService.findAll();
+    public List<Student> findAllStudents() {
+        return studentService.findAllStudents();
     }
 
     @GetMapping(path = {"/{id}"})
-    public ResponseEntity<Student> findById(
+    public ResponseEntity<Student> findStudentById(
             @PathVariable long id) {
-        return studentService.findById(id);
+        return studentService.findStudentById(id);
     }
 
     @PostMapping

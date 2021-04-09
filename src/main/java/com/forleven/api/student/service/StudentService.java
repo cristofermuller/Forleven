@@ -21,17 +21,17 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    public List<Student> findAll() {
+    public List<Student> findAllStudents() {
         return studentRepository.findAll();
     }
 
-    public ResponseEntity<Student> findById(long id) {
+    public ResponseEntity<Student> findStudentById(long id) {
         Optional<Student> studentId = studentRepository.findById(id);
         if (studentId.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ERRO);
         }
 
-        return studentRepository.findById(id)
+        return studentId
                 .map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -74,11 +74,15 @@ public class StudentService {
         if (studentId.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ERRO);
         }
-        return studentRepository.findById(id)
+
+        return studentId
                 .map(record -> {
                     studentRepository.deleteById(id);
                     return ResponseEntity.ok().build();
                 }).orElse(ResponseEntity.notFound().build());
+
     }
+
+
 
 }
