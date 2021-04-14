@@ -1,6 +1,8 @@
 package com.forleven.api;
 
-import com.forleven.api.student.Student;
+import com.forleven.api.student.entity.Student;
+import com.forleven.api.student.error.ConflictException;
+import com.forleven.api.student.error.NotFoundException;
 import com.forleven.api.student.repository.StudentRepository;
 import com.forleven.api.student.service.StudentService;
 import org.junit.jupiter.api.BeforeEach;
@@ -80,7 +82,7 @@ class StudentServiceTest {
 
 		when(studentRepository.findById(2L)).thenReturn(Optional.of(student));
 
-		Exception exception = assertThrows(ResponseStatusException.class, () ->
+		Exception exception = assertThrows(NotFoundException.class, () ->
 				studentService.findStudentById(1L));
 
 		verify(studentRepository, times(1)).findById(1L);
@@ -118,7 +120,7 @@ class StudentServiceTest {
 
 		when(studentRepository.findStudentByEnrollment("matricula")).thenReturn(Optional.of(student));
 
-		Exception exception = assertThrows(ResponseStatusException.class, () -> studentService.create(student));
+		Exception exception = assertThrows(ConflictException.class, () -> studentService.create(student));
 
 		verify(studentRepository, times(1)).findStudentByEnrollment("matricula");
 		verify(studentRepository, times(0)).save(any());
@@ -158,7 +160,7 @@ class StudentServiceTest {
 		when(studentRepository.findStudentByEnrollment("matricula")).thenReturn(Optional.of(student));
 		when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
 
-		Exception exception = assertThrows(ResponseStatusException.class, () -> studentService.update(1L, student));
+		Exception exception = assertThrows(ConflictException.class, () -> studentService.update(1L, student));
 
 		verify(studentRepository, times(1)).findById(1L);
 		verify(studentRepository, times(1)).findStudentByEnrollment("matricula");
@@ -177,7 +179,7 @@ class StudentServiceTest {
 
 		when(studentRepository.findById(2L)).thenReturn(Optional.of(student));
 
-		Exception exception = assertThrows(ResponseStatusException.class, () -> studentService.update(1L, student));
+		Exception exception = assertThrows(NotFoundException.class, () -> studentService.update(1L, student));
 
 		verify(studentRepository, times(1)).findById(1L);
 		verify(studentRepository, times(0)).findStudentByEnrollment("matricula");
@@ -209,7 +211,7 @@ class StudentServiceTest {
 
 		when(studentRepository.findById(2L)).thenReturn(Optional.of(student));
 
-		Exception exception = assertThrows(ResponseStatusException.class, () -> studentService.delete(1L));
+		Exception exception = assertThrows(NotFoundException.class, () -> studentService.delete(1L));
 
 		verify(studentRepository, times(1)).findById(1L);
 		verify(studentRepository, times(0)).deleteById(1L);
