@@ -1,5 +1,6 @@
 package com.forleven.api.student.service;
 
+import com.forleven.api.student.dto.StudentDTO;
 import com.forleven.api.student.entity.Student;
 import com.forleven.api.student.error.ConflictException;
 import com.forleven.api.student.error.NotFoundException;
@@ -36,34 +37,34 @@ public class StudentService {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    public Student create(Student student) {
+    public Student create(StudentDTO studentDTO) {
         Optional<Student> studentOptional = studentRepository
-                .findStudentByEnrollment(student.getEnrollment());
+                .findStudentByEnrollment(studentDTO.getEnrollment());
         if (studentOptional.isPresent()) {
             throw new ConflictException(ERROMATRICULA);
         }
 
-        return studentRepository.save(student);
+        return studentRepository.save(studentDTO.build());
     }
 
-    public ResponseEntity<Student> update (long id, Student student){
+    public ResponseEntity<Student> update (long id, StudentDTO studentDTO){
         Optional<Student> studentId = studentRepository.findById(id);
         if (studentId.isEmpty()) {
             throw new NotFoundException(ERRO);
         }
 
         Optional<Student> studentEnrollment = studentRepository
-                .findStudentByEnrollment(student.getEnrollment());
+                .findStudentByEnrollment(studentDTO.getEnrollment());
         if (studentEnrollment.isPresent()) {
             throw new ConflictException(ERROMATRICULA);
         }
 
         return studentId
                 .map(record -> {
-                    record.setName(student.getName());
-                    record.setSurname(student.getSurname());
-                    record.setEnrollment(student.getEnrollment());
-                    record.setPhone(student.getPhone());
+                    record.setName(studentDTO.getName());
+                    record.setSurname(studentDTO.getSurname());
+                    record.setEnrollment(studentDTO.getEnrollment());
+                    record.setPhones(studentDTO.getPhones());
                     Student updated = studentRepository.save(record);
                     return ResponseEntity.ok().body(updated);
                 }).orElse(ResponseEntity.notFound().build());}

@@ -1,5 +1,6 @@
 package com.forleven.api;
 
+import com.forleven.api.student.dto.StudentDTO;
 import com.forleven.api.student.entity.Student;
 import com.forleven.api.student.error.ConflictException;
 import com.forleven.api.student.error.NotFoundException;
@@ -11,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -98,29 +98,33 @@ class StudentServiceTest {
 	void createStudentSuccess() {
 		Student student = new Student
 				(1L, "nome", "sobrenome", "matricula", null);
+		StudentDTO studentDTO = new StudentDTO
+				(2L, "nome", "sobrenome", "matricula", null);
 		ArgumentCaptor<Student> studentArgumentCaptor =
 				ArgumentCaptor.forClass(Student.class);
 
 		when(studentRepository.save(any())).thenReturn(student);
 
-		studentService.create(student);
+		studentService.create(studentDTO);
 
 		verify(studentRepository, times(1)).save(studentArgumentCaptor.capture());
 		verify(studentRepository, times(1)).findStudentByEnrollment(any());
 
 		Student capturedStudent = studentArgumentCaptor.getValue();
 
-		assertEquals(student, capturedStudent);
+		assertEquals(student.getName(), capturedStudent.getName());
+		assertEquals(student.getSurname(), capturedStudent.getSurname());
+		assertEquals(student.getEnrollment(), capturedStudent.getEnrollment());
 	}
 
 	@Test()
 	void createStudentDuplicatedEnrollmentTest() {
-		Student student = new Student
+		StudentDTO studentDTO = new StudentDTO
 				(1L, "nome", "sobrenome", "matricula", null);
 
-		when(studentRepository.findStudentByEnrollment("matricula")).thenReturn(Optional.of(student));
+		when(studentRepository.findStudentByEnrollment("matricula")).thenReturn(Optional.of(studentDTO.build()));
 
-		Exception exception = assertThrows(ConflictException.class, () -> studentService.create(student));
+		Exception exception = assertThrows(ConflictException.class, () -> studentService.create(studentDTO));
 
 		verify(studentRepository, times(1)).findStudentByEnrollment("matricula");
 		verify(studentRepository, times(0)).save(any());
@@ -135,13 +139,15 @@ class StudentServiceTest {
 	void updateStudentSuccess() {
 		Student student = new Student
 				(1L, "nome", "sobrenome", "matricula", null);
+		StudentDTO studentDTO = new StudentDTO
+				(2L, "nome", "sobrenome", "matricula", null);
 		ArgumentCaptor<Student> studentArgumentCaptor =
 				ArgumentCaptor.forClass(Student.class);
 
 		when(studentRepository.save(any())).thenReturn(student);
 		when(studentRepository.findById(any())).thenReturn(Optional.of(student));
 
-		studentService.update(1L, student);
+		studentService.update(1L, studentDTO);
 
 		verify(studentRepository, times(1)).findById(1L);
 		verify(studentRepository, times(1)).findStudentByEnrollment(any());
@@ -149,18 +155,20 @@ class StudentServiceTest {
 
 		Student capturedStudent = studentArgumentCaptor.getValue();
 
-		assertEquals(student, capturedStudent);
+		assertEquals(student.getName(), capturedStudent.getName());
+		assertEquals(student.getSurname(), capturedStudent.getSurname());
+		assertEquals(student.getEnrollment(), capturedStudent.getEnrollment());
 	}
 
 	@Test
 	void updateStudentDuplicatedEnrollmentTest() {
-		Student student = new Student
+		StudentDTO studentDTO = new StudentDTO
 				(1L, "nome", "sobrenome", "matricula", null);
 
-		when(studentRepository.findStudentByEnrollment("matricula")).thenReturn(Optional.of(student));
-		when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
+		when(studentRepository.findStudentByEnrollment("matricula")).thenReturn(Optional.of(studentDTO.build()));
+		when(studentRepository.findById(1L)).thenReturn(Optional.of(studentDTO.build()));
 
-		Exception exception = assertThrows(ConflictException.class, () -> studentService.update(1L, student));
+		Exception exception = assertThrows(ConflictException.class, () -> studentService.update(1L, studentDTO));
 
 		verify(studentRepository, times(1)).findById(1L);
 		verify(studentRepository, times(1)).findStudentByEnrollment("matricula");
@@ -174,12 +182,12 @@ class StudentServiceTest {
 
 	@Test
 	void updateStudentNoExistingIdTest () {
-		Student student = new Student
+		StudentDTO studentDTO = new StudentDTO
 				(1L, "nome", "sobrenome", "matricula", null);
 
-		when(studentRepository.findById(2L)).thenReturn(Optional.of(student));
+		when(studentRepository.findById(2L)).thenReturn(Optional.of(studentDTO.build()));
 
-		Exception exception = assertThrows(NotFoundException.class, () -> studentService.update(1L, student));
+		Exception exception = assertThrows(NotFoundException.class, () -> studentService.update(1L, studentDTO));
 
 		verify(studentRepository, times(1)).findById(1L);
 		verify(studentRepository, times(0)).findStudentByEnrollment("matricula");
