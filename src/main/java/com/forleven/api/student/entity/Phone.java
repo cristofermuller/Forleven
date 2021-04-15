@@ -13,5 +13,5 @@ import javax.persistence.Embeddable;
 public class Phone {
 
     @Column(name = "phone")
-    private String phone;
+    private String phones;
 }
