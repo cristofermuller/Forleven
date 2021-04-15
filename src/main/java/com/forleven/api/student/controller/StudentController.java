@@ -1,10 +1,18 @@
 package com.forleven.api.student.controller;
 
-import com.forleven.api.student.Student;
+import com.forleven.api.student.entity.Student;
+import com.forleven.api.student.dto.StudentDTO;
 import com.forleven.api.student.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -29,17 +37,16 @@ public class StudentController{
     @PostMapping
     public Student create(
             @Valid
-            @RequestBody Student student) {
-        return studentService.create(student);
-
+            @RequestBody StudentDTO studentDTO) {
+        return studentService.create(studentDTO.build());
     }
 
     @PutMapping(value="/{id}")
     public ResponseEntity<Student> update(
             @Valid
-            @RequestBody Student student,
+            @RequestBody StudentDTO studentDTO,
             @PathVariable long id) {
-        return studentService.update(id, student);
+        return studentService.update(id, studentDTO.build());
     }
 
     @DeleteMapping(path ={"/{id}"})
