@@ -28,10 +28,22 @@ public class StudentController{
         return studentService.findAllStudents();
     }
 
-    @GetMapping(path = {"/{id}"})
+    @GetMapping(path = "/{id}")
     public ResponseEntity<Student> findStudentById(
             @PathVariable long id) {
         return studentService.findStudentById(id);
+    }
+
+    @GetMapping(path = "/user/{name}")
+    public ResponseEntity<List<Student>> findStudentByName(
+            @PathVariable String name) {
+        return studentService.findStudentByName(name);
+    }
+
+    @GetMapping(path = "/status/{status}")
+    public ResponseEntity<List<Student>> sortActiveAndInactiveStudents(
+            @PathVariable boolean status) {
+        return studentService.sortActiveAndInactiveStudents(status);
     }
 
     @PostMapping
@@ -41,7 +53,7 @@ public class StudentController{
         return studentService.create(studentDTO);
     }
 
-    @PutMapping(value="/{id}")
+    @PutMapping(path = "/{id}")
     public ResponseEntity<Student> update(
             @Valid
             @RequestBody StudentDTO studentDTO,
@@ -49,8 +61,8 @@ public class StudentController{
         return studentService.update(id, studentDTO);
     }
 
-    @DeleteMapping(path ={"/{id}"})
-    public ResponseEntity <Object> delete(
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Student> delete(
             @PathVariable long id) {
         return studentService.delete(id);
     }
