@@ -30,12 +30,15 @@ public class StudentDTO {
 
     private List<Phone> phones;
 
+    private boolean status;
+
     public Student build() {
         return new Student()
                 .setName(this.name)
                 .setSurname(this.surname)
                 .setEnrollment(this.enrollment)
-                .setPhones(this.phones);
+                .setPhones(this.phones)
+                .setStatus(true);
     }
 
 }

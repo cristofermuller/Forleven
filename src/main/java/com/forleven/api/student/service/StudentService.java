@@ -5,6 +5,8 @@ import com.forleven.api.student.entity.Student;
 import com.forleven.api.student.error.ConflictException;
 import com.forleven.api.student.error.NotFoundException;
 import com.forleven.api.student.repository.StudentRepository;
+import com.forleven.api.student.specification.StudentSpecification;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -35,6 +37,24 @@ public class StudentService {
         return studentId
                 .map(record -> ResponseEntity.ok().body(record))
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    public ResponseEntity<List<Student>> findStudentByName(String name) {
+        Specification<Student> spec = StudentSpecification.deNome(name);
+        List<Student> students = studentRepository.findAll(spec);
+        if (students.isEmpty()) {
+            throw new NotFoundException(ERRO);
+        }
+        return ResponseEntity.ok(students);
+    }
+
+    public ResponseEntity<List<Student>> sortActiveAndInactiveStudents(boolean status) {
+        Specification<Student> spec = StudentSpecification.deStatus(status);
+        List<Student> students = studentRepository.findAll(spec);
+        if (students.isEmpty()) {
+            throw new NotFoundException(ERRO);
+        }
+        return ResponseEntity.ok(students);
     }
 
     public Student create(StudentDTO studentDTO) {
@@ -70,7 +90,7 @@ public class StudentService {
                 }).orElse(ResponseEntity.notFound().build());}
 
 
-    public ResponseEntity<Object> delete (long id) {
+    public ResponseEntity<Student> delete (long id) {
         Optional<Student> studentId = studentRepository.findById(id);
         if (studentId.isEmpty()) {
             throw new NotFoundException(ERRO);
@@ -78,10 +98,10 @@ public class StudentService {
 
         return studentId
                 .map(record -> {
-                    studentRepository.deleteById(id);
-                    return ResponseEntity.ok().build();
+                    record.setStatus(false);
+                    Student updated = studentRepository.save(record);
+                    return ResponseEntity.ok().body(updated);
                 }).orElse(ResponseEntity.notFound().build());
     }
-
 
 }

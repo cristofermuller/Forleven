@@ -35,7 +35,7 @@ class StudentServiceTest {
 	void findAllSuccess() {
 
 		Student student = new Student
-				(1L, "nome", "sobrenome", "matricula", null);
+				(1L, "nome", "sobrenome", "matricula", true, null);
 		ArgumentCaptor<Student> studentArgumentCaptor =
 				ArgumentCaptor.forClass(Student.class);
 
@@ -56,7 +56,7 @@ class StudentServiceTest {
 	@Test
 	void findByIdSuccess() {
 		Student student = new Student
-				(1L, "nome", "sobrenome", "matricula", null);
+				(1L, "nome", "sobrenome", "matricula", true, null);
 		ArgumentCaptor<Student> studentArgumentCaptor =
 				ArgumentCaptor.forClass(Student.class);
 
@@ -78,7 +78,7 @@ class StudentServiceTest {
 	@Test
 	void findByIdFail() {
 		Student student = new Student
-				(1L, "nome", "sobrenome", "matricula", null);
+				(1L, "nome", "sobrenome", "matricula", true, null);
 
 		when(studentRepository.findById(2L)).thenReturn(Optional.of(student));
 
@@ -97,9 +97,9 @@ class StudentServiceTest {
 	@Test
 	void createStudentSuccess() {
 		Student student = new Student
-				(1L, "nome", "sobrenome", "matricula", null);
+				(1L, "nome", "sobrenome", "matricula", true, null);
 		StudentDTO studentDTO = new StudentDTO
-				(2L, "nome", "sobrenome", "matricula", null);
+				(2L, "nome", "sobrenome", "matricula", null, true );
 		ArgumentCaptor<Student> studentArgumentCaptor =
 				ArgumentCaptor.forClass(Student.class);
 
@@ -120,7 +120,7 @@ class StudentServiceTest {
 	@Test()
 	void createStudentDuplicatedEnrollmentTest() {
 		StudentDTO studentDTO = new StudentDTO
-				(1L, "nome", "sobrenome", "matricula", null);
+				(2L, "nome", "sobrenome", "matricula", null, true );
 
 		when(studentRepository.findStudentByEnrollment("matricula")).thenReturn(Optional.of(studentDTO.build()));
 
@@ -138,9 +138,9 @@ class StudentServiceTest {
 	@Test
 	void updateStudentSuccess() {
 		Student student = new Student
-				(1L, "nome", "sobrenome", "matricula", null);
+				(1L, "nome", "sobrenome", "matricula", true, null);
 		StudentDTO studentDTO = new StudentDTO
-				(2L, "nome", "sobrenome", "matricula", null);
+				(2L, "nome", "sobrenome", "matricula", null, true );
 		ArgumentCaptor<Student> studentArgumentCaptor =
 				ArgumentCaptor.forClass(Student.class);
 
@@ -163,7 +163,7 @@ class StudentServiceTest {
 	@Test
 	void updateStudentDuplicatedEnrollmentTest() {
 		StudentDTO studentDTO = new StudentDTO
-				(1L, "nome", "sobrenome", "matricula", null);
+				(2L, "nome", "sobrenome", "matricula", null, true );
 
 		when(studentRepository.findStudentByEnrollment("matricula")).thenReturn(Optional.of(studentDTO.build()));
 		when(studentRepository.findById(1L)).thenReturn(Optional.of(studentDTO.build()));
@@ -183,7 +183,7 @@ class StudentServiceTest {
 	@Test
 	void updateStudentNoExistingIdTest () {
 		StudentDTO studentDTO = new StudentDTO
-				(1L, "nome", "sobrenome", "matricula", null);
+				(2L, "nome", "sobrenome", "matricula", null, true );
 
 		when(studentRepository.findById(2L)).thenReturn(Optional.of(studentDTO.build()));
 
@@ -202,20 +202,20 @@ class StudentServiceTest {
 	@Test
 	void deleteStudentSuccess() {
 		Student student = new Student
-				(1L, "nome", "sobrenome", "matricula", null);
+				(1L, "nome", "sobrenome", "matricula", true, null);
 
 		when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
 
 		studentService.delete(1L);
 
 		verify(studentRepository, times(1)).findById(1L);
-		verify(studentRepository, times(1)).deleteById(1L);
+		verify(studentRepository, times(1)).save(any());
 	}
 
 	@Test
 	void deleteStudentNoExistingIdTest() {
 		Student student = new Student
-				(1L, "nome", "sobrenome", "matricula", null);
+				(1L, "nome", "sobrenome", "matricula", true, null);
 
 		when(studentRepository.findById(2L)).thenReturn(Optional.of(student));
 

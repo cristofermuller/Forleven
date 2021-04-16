@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -24,6 +25,7 @@ public class Student {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "student_id")
     private Long id;
 
     private String name;
@@ -31,6 +33,8 @@ public class Student {
     private String surname;
 
     private String enrollment;
+
+    private boolean status;
 
     @ElementCollection
     @CollectionTable(name = "phones", joinColumns = @JoinColumn(name = "student_id"))
